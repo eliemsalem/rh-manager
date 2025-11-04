@@ -1,0 +1,50 @@
+{% extends "employees/base.html" %}
+{% block title %}Payroll Export · HR Manager{% endblock %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3"><i class="bi bi-file-earmark-excel"></i> Export Payroll</h5>
+    <form method="get" action="{% url 'payroll:payroll_export_excel' %}">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Year</label>
+          <input type="number" name="year" class="form-control" min="2020" max="2100" placeholder="2025">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Month</label>
+          <select name="month" class="form-select">
+            <option value="">-- All --</option>
+            {% for i in 1|to_int:12 %}
+            <option value="{{ i }}">{{ i|date:"F" }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Contract Company</label>
+          <input type="text" class="form-control" name="contract_company" placeholder="e.g. La Poste">
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Contract Type</label>
+          <input type="text" class="form-control" name="contract_type" placeholder="e.g. CDI, Freelance">
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Currency</label>
+          <input type="text" class="form-control" name="devise" placeholder="e.g. EUR, USD">
+        </div>
+      </div>
+
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-download"></i> Export Excel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

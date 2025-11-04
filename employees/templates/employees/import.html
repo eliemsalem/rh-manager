@@ -1,0 +1,99 @@
+{% extends "employees/base.html" %}
+{% block title %}Import Employees from Excel · HR Manager{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+  <div class="card-body p-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">
+        <i class="bi bi-file-earmark-arrow-up"></i> Import Employees from Excel
+      </h5>
+      <a href="{% url 'employees:download_template' %}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-download"></i> Download Excel Template
+      </a>
+    </div>
+
+    <!-- Instructions -->
+    <p class="text-muted">
+      The Excel file must contain the following columns 
+      (all are optional, but recommended for full data import):
+    </p>
+
+    <div class="bg-light rounded p-3 mb-3 small">
+      <code>
+        Employee Name, Zoho ID, Project, Title, Email, Country, Lead 1, PT Date,
+        FT Date, Last day, Salary, devise, Comment, Accomodation, Contract Type,
+        Contract company, Bank Name, Bank Country, IBAN Number, Swift
+      </code>
+    </div>
+
+    <p class="text-secondary small mb-4">
+      ⚠️ The file must be in <strong>.xlsx</strong> format (Excel 2010 or newer).
+    </p>
+
+    <!-- Upload Form -->
+    <form method="post" enctype="multipart/form-data" class="mt-2">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="file" class="form-label fw-semibold">Select Excel File (.xlsx)</label>
+        <input type="file" class="form-control" id="file" name="file" accept=".xlsx" required>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-upload"></i> Import File
+        </button>
+        <a class="btn btn-outline-secondary" href="{% url 'employees:employee_list' %}">
+          <i class="bi bi-arrow-left"></i> Back
+        </a>
+      </div>
+    </form>
+
+    <!-- Divider -->
+    <hr class="my-4">
+
+    <!-- Dictionary -->
+    <h6 class="text-primary mb-3"><i class="bi bi-book"></i> Excel Field Reference</h6>
+
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Column Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Employee Name</code></td><td>Full name of the employee (First and Last name).</td></tr>
+          <tr><td><code>Zoho ID</code></td><td>Unique identifier from Zoho People or your HR system.</td></tr>
+          <tr><td><code>Project</code></td><td>Project or department the employee works in.</td></tr>
+          <tr><td><code>Title</code></td><td>Job title or position (e.g. Data Analyst, Developer).</td></tr>
+          <tr><td><code>Email</code></td><td>Work email address of the employee.</td></tr>
+          <tr><td><code>Country</code></td><td>Country of employment or residence.</td></tr>
+          <tr><td><code>Lead 1</code></td><td>Main team lead or supervisor name.</td></tr>
+          <tr><td><code>PT Date</code></td><td>Start date of part-time contract (YYYY-MM-DD).</td></tr>
+          <tr><td><code>FT Date</code></td><td>Start date of full-time contract (YYYY-MM-DD).</td></tr>
+          <tr><td><code>Last day</code></td><td>Last working day (if applicable).</td></tr>
+          <tr><td><code>Salary</code></td><td>Monthly base net salary.</td></tr>
+          <tr><td><code>devise</code></td><td>Currency of salary (e.g. EUR, USD, GBP).</td></tr>
+          <tr><td><code>Comment</code></td><td>Remarks or HR notes about the employee.</td></tr>
+          <tr><td><code>Accomodation</code></td><td>Housing information if provided by company.</td></tr>
+          <tr><td><code>Contract Type</code></td><td>Type of contract (e.g. CDI, CDD, Freelance).</td></tr>
+          <tr><td><code>Contract company</code></td><td>Legal employer or contracting company name.</td></tr>
+          <tr><td><code>Bank Name</code></td><td>Name of the employee’s bank.</td></tr>
+          <tr><td><code>Bank Country</code></td><td>Country where the bank is located.</td></tr>
+          <tr><td><code>IBAN Number</code></td><td>International Bank Account Number.</td></tr>
+          <tr><td><code>Swift</code></td><td>Bank SWIFT/BIC code for international transfers.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="text-muted small mt-3">
+      💡 Tip: If a column is missing or left empty, it will be skipped automatically during import.
+    </p>
+
+  </div>
+</div>
+{% endblock %}

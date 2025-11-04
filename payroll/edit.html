@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Paie — {{ payroll.employee.prenom }} {{ payroll.employee.nom }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 border-0 rounded-4">
+    <h2 class="text-center mb-4 fw-bold text-primary">
+      🧾 Fiche de paie — {{ payroll.employee.prenom }} {{ payroll.employee.nom }}
+    </h2>
+
+    <form method="post" id="payrollForm">
+      {% csrf_token %}
+
+      <!-- Mois & Année -->
+      <div class="row g-3 mb-4 border-bottom pb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Mois</label>
+          {{ form.mois }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Année</label>
+          {{ form.annee }}
+        </div>
+      </div>
+
+      <!-- Bloc principal -->
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Salaire de base</label>
+          {{ form.salaire_base }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label fw-semibold">Devise</label>
+          {{ form.devise }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Heures supp.</label>
+          {{ form.heures_supp }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Montant heures supp.</label>
+          {{ form.montant_heures_supp }}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Remboursement</label>
+          {{ form.remboursement }}
+        </div>
+        <div class="col-md-8">
+          <label class="form-label fw-semibold">Commentaire remboursement</label>
+          {{ form.remboursement_comment }}
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Congés (jours)</label>
+          {{ form.nb_conges }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Déductions</label>
+          {{ form.deduction }}
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Autres</label>
+          {{ form.autres }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Commentaire autres</label>
+          {{ form.autres_comment }}
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label text-success fw-bold">💰 Total payé</label>
+          {{ form.total_paye }}
+        </div>
+      </div>
+
+      <!-- Boutons -->
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">
+          💾 Enregistrer la paie
+        </button>
+        <a class="btn btn-outline-secondary flex-grow-1" href="{% url 'payroll:payroll_list' %}">
+          ⬅️ Retour à la liste
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Script de recalcul automatique -->
+<script>
+  const base = document.getElementById("id_salaire_base");
+  const hs = document.getElementById("id_heures_supp");
+  const montantHs = document.getElementById("id_montant_heures_supp");
+  const remb = document.getElementById("id_remboursement");
+  const autres = document.getElementById("id_autres");
+  const ded = document.getElementById("id_deduction");
+  const total = document.getElementById("id_total_paye");
+
+  function toNum(x){ const v = parseFloat(x); return isNaN(v) ? 0 : v; }
+
+  function recalc() {
+    const b  = toNum(base?.value);
+    const h  = toNum(hs?.value);
+    const r  = toNum(remb?.value);
+    const a  = toNum(autres?.value);
+    const d  = toNum(ded?.value);
+
+    // Taux horaire = base / 22 / 39
+    const taux = (b > 0) ? (b / 22 / 39) : 0;
+    const mhs  = h * taux;
+
+    if (montantHs) montantHs.value = mhs.toFixed(2);
+
+    const t = b + mhs + r + a - d;
+    if (total) total.value = t.toFixed(2);
+  }
+
+  [base, hs, remb, autres, ded].forEach(e => e && e.addEventListener("input", recalc));
+  recalc();
+</script>
+{% endblock %}

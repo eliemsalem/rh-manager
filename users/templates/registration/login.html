@@ -1,0 +1,29 @@
+{% extends "employees/base.html" %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card shadow-sm" style="width: 400px;">
+    <div class="card-body">
+      <h4 class="mb-4 text-center">🔐 Connexion</h4>
+
+      {% if form.errors %}
+        <div class="alert alert-danger">Identifiant ou mot de passe incorrect.</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Nom d’utilisateur</label>
+          {{ form.username }}
+        </div>
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Mot de passe</label>
+          {{ form.password }}
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

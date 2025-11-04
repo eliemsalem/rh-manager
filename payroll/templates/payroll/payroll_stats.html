@@ -1,0 +1,133 @@
+{% extends "employees/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="bi bi-graph-up"></i> Statistiques des Paies par Devise</h2>
+
+    <!-- ===================== FORMULAIRE DE COMPARAISON ===================== -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Mois 1</label>
+            <input type="number" class="form-control" name="month1" value="{{ month1 }}" min="1" max="12">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Année 1</label>
+            <input type="number" class="form-control" name="year1" value="{{ year1 }}">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Mois 2</label>
+            <input type="number" class="form-control" name="month2" value="{{ month2 }}" min="1" max="12">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Année 2</label>
+            <input type="number" class="form-control" name="year2" value="{{ year2 }}">
+        </div>
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary mt-2">
+                <i class="bi bi-arrow-repeat"></i> Comparer
+            </button>
+        </div>
+    </form>
+
+    <hr>
+
+    <!-- ===================== TABLEAU DES TOTAUX PAR DEVISE ===================== -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="mb-3"><i class="bi bi-currency-exchange"></i> Totaux par Devise</h5>
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Devise</th>
+              <th>{{ month1 }}/{{ year1 }}</th>
+              <th>{{ month2 }}/{{ year2 }}</th>
+              <th>Différence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for currency, data in totals.items %}
+            <tr>
+              <td><strong>{{ currency }}</strong></td>
+              <td>{{ data.period1|floatformat:2 }}</td>
+              <td>{{ data.period2|floatformat:2 }}</td>
+              <td>
+                {% if data.difference > 0 %}
+                  <span class="text-success fw-bold">+{{ data.difference|floatformat:2 }}</span>
+                {% elif data.difference < 0 %}
+                  <span class="text-danger fw-bold">{{ data.difference|floatformat:2 }}</span>
+                {% else %}
+                  <span class="text-muted">0.00</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted">Aucune donnée disponible</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===================== LISTES D'EMPLOYÉS ===================== -->
+    <div class="row mt-4">
+
+        <!-- Nouveaux employés -->
+        <div class="col-md-4">
+            <div class="card border-success mb-4">
+                <div class="card-header bg-success text-white">
+                    👋 Nouveaux employés ({{ new_employees.count }})
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for emp in new_employees %}
+                        <li class="list-group-item">
+                            {{ emp.first_name }} {{ emp.last_name }}
+                            {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Aucun nouvel employé</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Employés sortants -->
+        <div class="col-md-4">
+            <div class="card border-danger mb-4">
+                <div class="card-header bg-danger text-white">
+                    🚪 Employés sortants ({{ left_employees.count }})
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for emp in left_employees %}
+                        <li class="list-group-item">
+                            {{ emp.first_name }} {{ emp.last_name }}
+                            {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Aucun employé sortant</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Employés communs -->
+        <div class="col-md-4">
+            <div class="card border-secondary mb-4">
+                <div class="card-header bg-secondary text-white">
+                    👥 Employés communs ({{ common_employees.count }})
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for emp in common_employees %}
+                        <li class="list-group-item">
+                            {{ emp.first_name }} {{ emp.last_name }}
+                            {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Aucun employé commun</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

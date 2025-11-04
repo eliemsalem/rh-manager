@@ -1,0 +1,103 @@
+{% extends "employees/base.html" %}
+{% block title %}Payroll · HR Manager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm p-3 border-0">
+    <div class="d-flex flex-wrap align-items-end gap-2">
+      <form method="get" class="row g-2">
+        <!-- Month -->
+        <div class="col-auto">
+          <label class="form-label mb-0 fw-semibold">Month</label>
+          <select name="month" class="form-select">
+            {% for m, mname in months %}
+              <option value="{{ m }}" {% if m == month %}selected{% endif %}>
+                {{ mname|capfirst }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Year -->
+        <div class="col-auto">
+          <label class="form-label mb-0 fw-semibold">Year</label>
+          <select name="year" class="form-select">
+            {% for y in years %}
+              <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Search -->
+        <div class="col-auto">
+          <label class="form-label mb-0 fw-semibold">Search</label>
+          <input type="text" class="form-control" placeholder="Name, email, project..." name="q" value="{{ query }}">
+        </div>
+
+        <!-- Filter button -->
+        <div class="col-auto align-self-end">
+          <button class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
+        </div>
+      </form>
+
+      <!-- Actions -->
+      <div class="ms-auto d-flex gap-2">
+        <a class="btn btn-success" href="{% url 'payroll:payroll_generate' %}?year={{ year }}&month={{ month }}">
+          <i class="bi bi-gear"></i> Generate for Active Employees
+        </a>
+        <a class="btn btn-outline-secondary" href="{% url 'payroll:payroll_bulk_zip' year month %}">
+          <i class="bi bi-archive"></i> Download ZIP
+        </a>
+        <a class="btn btn-outline-success" href="{% url 'payroll:payroll_export_excel' %}?year={{ year }}&month={{ month }}">
+          <i class="bi bi-file-earmark-excel"></i> Export Excel
+        </a>
+      </div>
+    </div>
+
+    <!-- Payroll Table -->
+    <div class="table-responsive mt-4">
+      <table class="table table-hover align-middle table-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Employee</th>
+            <th>Base</th>
+            <th>Overtime</th>
+            <th>Reimbursement</th>
+            <th>Others</th>
+            <th>Deduction</th>
+            <th>Total</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in items %}
+          <tr>
+            <td>{{ it.employee.prenom }} {{ it.employee.nom }}</td>
+            <td>{{ it.salaire_base|floatformat:2 }} {{ it.devise }}</td>
+            <td>{{ it.heures_supp|default:"-" }} → {{ it.montant_heures_supp|default:"-" }}</td>
+            <td>{{ it.remboursement|default:"-" }}</td>
+            <td>{{ it.autres|default:"-" }}</td>
+            <td>{{ it.deduction|default:"-" }}</td>
+            <td><strong>{{ it.total_paye|floatformat:2 }} {{ it.devise }}</strong></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'payroll:payroll_edit' it.pk %}">
+                <i class="bi bi-pencil"></i> Edit
+              </a>
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'payroll:payroll_pdf' it.pk %}">
+                <i class="bi bi-filetype-pdf"></i> PDF
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center text-muted py-3">
+              No payroll found for this period.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

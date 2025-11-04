@@ -1,0 +1,170 @@
+{% extends "employees/base.html" %}
+{% load static %}
+{% block title %}Add Employee · HR Manager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0"><i class="bi bi-person-plus"></i> New Employee</h4>
+      </div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- 🧑 Identity -->
+        <h6 class="text-primary mt-3 mb-2"><i class="bi bi-person-badge"></i> Identity</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">First Name</label>
+            {{ form.prenom }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            {{ form.nom }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            {{ form.email }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Country</label>
+            {{ form.country }}
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- 💼 Job & Contract -->
+        <h6 class="text-primary mb-2"><i class="bi bi-briefcase"></i> Job & Contract</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Project</label>
+            {{ form.project }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Job Title</label>
+            {{ form.title }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Contract Type</label>
+            {{ form.contract_type }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contract Company</label>
+            {{ form.contract_company }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Part-time Start Date</label>
+            {{ form.pt_date }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Full-time Start Date</label>
+            {{ form.ft_date }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Last Working Day</label>
+            {{ form.last_day }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Team Lead</label>
+            {{ form.lead_1 }}
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- 💰 Salary & Currency -->
+        <h6 class="text-primary mb-2"><i class="bi bi-cash-coin"></i> Salary</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Net Salary</label>
+            {{ form.salaire_net }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Currency</label>
+            {{ form.devise }}
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- 🏦 Bank Information -->
+        <h6 class="text-primary mb-2"><i class="bi bi-bank"></i> Bank Information</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Bank Name</label>
+            {{ form.bank_name }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Bank Country</label>
+            {{ form.bank_country }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">IBAN</label>
+            {{ form.iban }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">SWIFT / BIC</label>
+            {{ form.swift }}
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- 📝 Other Info -->
+        <h6 class="text-primary mb-2"><i class="bi bi-info-circle"></i> Other Details</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Accommodation</label>
+            {{ form.accomodation }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Zoho ID</label>
+            {{ form.zoho_id }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Comments</label>
+          {{ form.comment }}
+        </div>
+
+        <div class="form-check form-switch mb-4">
+          {{ form.actif }}
+          <label class="form-check-label" for="id_actif">Active Employee</label>
+        </div>
+
+        <!-- 🧾 Actions -->
+        <div class="d-flex gap-2 mt-4">
+          <button class="btn btn-primary" type="submit">
+            <i class="bi bi-save"></i> Save Employee
+          </button>
+          <a class="btn btn-outline-secondary" href="{% url 'employees:employee_list' %}">
+            <i class="bi bi-arrow-left"></i> Cancel
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
