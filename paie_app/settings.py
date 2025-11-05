@@ -30,7 +30,9 @@ import os
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "rh-manager-goe2.onrender.com",  # ← ton domaine Render
+    "rh-manager-goe2.onrender.com", 
+
+     # ← ton domaine Render
 ]
 
 
@@ -164,3 +166,15 @@ TEMPLATES = [
 LOGIN_URL = "/login/"               # page de connexion
 LOGIN_REDIRECT_URL = "/"  # page d'accueil après connexion
 LOGOUT_REDIRECT_URL = "/login/" 
+
+
+import os
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
