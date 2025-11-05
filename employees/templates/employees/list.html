@@ -1,13 +1,13 @@
 {% extends "employees/base.html" %}
-{% block title %}Employés actifs · RH Manager{% endblock %}
+{% block title %}Active Employees · HR Manager{% endblock %}
 {% block content %}
 
 <div class="card">
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0"><i class="bi bi-people"></i> Employés actifs</h5>
+      <h5 class="mb-0"><i class="bi bi-people"></i> Active Employees</h5>
       <form class="d-flex" method="get">
-        <input class="form-control me-2" type="search" name="q" value="{{ query }}" placeholder="Recherche (nom, email, projet, IBAN…)">
+        <input class="form-control me-2" type="search" name="q" value="{{ query }}" placeholder="Search (name, email, project, IBAN…)">
         <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
       </form>
     </div>
@@ -16,12 +16,12 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
+            <th>Last Name</th>
+            <th>First Name</th>
             <th>Email</th>
-            <th>Projet</th>
-            <th>Date d'import</th>
-            <th>Actif</th>
+            <th>Project</th>
+            <th>Import Date</th>
+            <th>Active</th>
             <th class="text-end">Actions</th>
           </tr>
         </thead>
@@ -36,20 +36,20 @@
             <td>{{ e.date_import|date:"d/m/Y H:i" }}</td>
             <td>
               {% if e.actif %}
-                <span class="badge bg-success">Oui</span>
+                <span class="badge bg-success">Yes</span>
               {% else %}
-                <span class="badge bg-secondary">Non</span>
+                <span class="badge bg-secondary">No</span>
               {% endif %}
             </td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
-                <i class="bi bi-pencil-square"></i> Détail
+                <i class="bi bi-pencil-square"></i> Details
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="7" class="text-center text-muted">Aucun employé trouvé.</td>
+            <td colspan="7" class="text-center text-muted">No employees found.</td>
           </tr>
           {% endfor %}
         </tbody>

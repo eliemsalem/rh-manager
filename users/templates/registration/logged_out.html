@@ -1,9 +1,9 @@
 {% extends "employees/base.html" %}
-{% block title %}Déconnexion{% endblock %}
+{% block title %}Logout{% endblock %}
 
 {% block content %}
 <div class="text-center py-5">
-  <h4>👋 Vous êtes bien déconnecté.</h4>
-  <a href="{% url 'login' %}" class="btn btn-primary mt-3">Se reconnecter</a>
+  <h4>👋 You have been successfully logged out.</h4>
+  <a href="{% url 'login' %}" class="btn btn-primary mt-3">Log in again</a>
 </div>
 {% endblock %}

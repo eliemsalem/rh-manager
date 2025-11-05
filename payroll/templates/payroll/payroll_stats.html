@@ -3,46 +3,46 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4"><i class="bi bi-graph-up"></i> Statistiques des Paies par Devise</h2>
+    <h2 class="mb-4"><i class="bi bi-graph-up"></i> Payroll Statistics by Currency</h2>
 
-    <!-- ===================== FORMULAIRE DE COMPARAISON ===================== -->
+    <!-- ===================== COMPARISON FORM ===================== -->
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-3">
-            <label class="form-label fw-semibold">Mois 1</label>
+            <label class="form-label fw-semibold">Month 1</label>
             <input type="number" class="form-control" name="month1" value="{{ month1 }}" min="1" max="12">
         </div>
         <div class="col-md-3">
-            <label class="form-label fw-semibold">Année 1</label>
+            <label class="form-label fw-semibold">Year 1</label>
             <input type="number" class="form-control" name="year1" value="{{ year1 }}">
         </div>
         <div class="col-md-3">
-            <label class="form-label fw-semibold">Mois 2</label>
+            <label class="form-label fw-semibold">Month 2</label>
             <input type="number" class="form-control" name="month2" value="{{ month2 }}" min="1" max="12">
         </div>
         <div class="col-md-3">
-            <label class="form-label fw-semibold">Année 2</label>
+            <label class="form-label fw-semibold">Year 2</label>
             <input type="number" class="form-control" name="year2" value="{{ year2 }}">
         </div>
         <div class="col-12 text-end">
             <button type="submit" class="btn btn-primary mt-2">
-                <i class="bi bi-arrow-repeat"></i> Comparer
+                <i class="bi bi-arrow-repeat"></i> Compare
             </button>
         </div>
     </form>
 
     <hr>
 
-    <!-- ===================== TABLEAU DES TOTAUX PAR DEVISE ===================== -->
+    <!-- ===================== TOTALS BY CURRENCY ===================== -->
     <div class="card shadow-sm mb-4">
       <div class="card-body">
-        <h5 class="mb-3"><i class="bi bi-currency-exchange"></i> Totaux par Devise</h5>
+        <h5 class="mb-3"><i class="bi bi-currency-exchange"></i> Totals by Currency</h5>
         <table class="table table-bordered table-striped align-middle">
           <thead class="table-light">
             <tr>
-              <th>Devise</th>
+              <th>Currency</th>
               <th>{{ month1 }}/{{ year1 }}</th>
               <th>{{ month2 }}/{{ year2 }}</th>
-              <th>Différence</th>
+              <th>Difference</th>
             </tr>
           </thead>
           <tbody>
@@ -62,21 +62,21 @@
               </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="text-center text-muted">Aucune donnée disponible</td></tr>
+            <tr><td colspan="4" class="text-center text-muted">No data available</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ===================== LISTES D'EMPLOYÉS ===================== -->
+    <!-- ===================== EMPLOYEE LISTS ===================== -->
     <div class="row mt-4">
 
-        <!-- Nouveaux employés -->
+        <!-- New Employees -->
         <div class="col-md-4">
             <div class="card border-success mb-4">
                 <div class="card-header bg-success text-white">
-                    👋 Nouveaux employés ({{ new_employees.count }})
+                    👋 New Employees ({{ new_employees.count }})
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for emp in new_employees %}
@@ -85,17 +85,17 @@
                             {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
                         </li>
                     {% empty %}
-                        <li class="list-group-item text-muted">Aucun nouvel employé</li>
+                        <li class="list-group-item text-muted">No new employees</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
 
-        <!-- Employés sortants -->
+        <!-- Departed Employees -->
         <div class="col-md-4">
             <div class="card border-danger mb-4">
                 <div class="card-header bg-danger text-white">
-                    🚪 Employés sortants ({{ left_employees.count }})
+                    🚪 Departed Employees ({{ left_employees.count }})
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for emp in left_employees %}
@@ -104,17 +104,17 @@
                             {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
                         </li>
                     {% empty %}
-                        <li class="list-group-item text-muted">Aucun employé sortant</li>
+                        <li class="list-group-item text-muted">No departed employees</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
 
-        <!-- Employés communs -->
+        <!-- Common Employees -->
         <div class="col-md-4">
             <div class="card border-secondary mb-4">
                 <div class="card-header bg-secondary text-white">
-                    👥 Employés communs ({{ common_employees.count }})
+                    👥 Common Employees ({{ common_employees.count }})
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for emp in common_employees %}
@@ -123,7 +123,7 @@
                             {% if emp.email %}<br><small class="text-muted">{{ emp.email }}</small>{% endif %}
                         </li>
                     {% empty %}
-                        <li class="list-group-item text-muted">Aucun employé commun</li>
+                        <li class="list-group-item text-muted">No common employees</li>
                     {% endfor %}
                 </ul>
             </div>

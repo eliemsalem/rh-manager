@@ -1,19 +1,36 @@
 {% extends "employees/base.html" %}
-{% block title %}Employés inactifs · RH Manager{% endblock %}
+{% block title %}Inactive Employees · HR Manager{% endblock %}
 {% block content %}
 <div class="card"><div class="card-body">
-  <h5 class="mb-3"><i class="bi bi-moon"></i> Employés inactifs</h5>
+  <h5 class="mb-3"><i class="bi bi-moon"></i> Inactive Employees</h5>
   <div class="table-responsive">
     <table class="table align-middle">
-      <thead><tr><th>Nom</th><th>Prénom</th><th>Email</th><th>Projet</th><th></th></tr></thead>
+      <thead>
+        <tr>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Email</th>
+          <th>Project</th>
+          <th></th>
+        </tr>
+      </thead>
       <tbody>
         {% for e in employees %}
         <tr>
-          <td>{{ e.nom }}</td><td>{{ e.prenom }}</td><td>{{ e.email }}</td><td>{{ e.project }}</td>
-          <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}"><i class="bi bi-pencil-square"></i> Détail</a></td>
+          <td>{{ e.nom }}</td>
+          <td>{{ e.prenom }}</td>
+          <td>{{ e.email }}</td>
+          <td>{{ e.project }}</td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
+              <i class="bi bi-pencil-square"></i> Details
+            </a>
+          </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="text-center text-muted">Aucun résultat.</td></tr>
+        <tr>
+          <td colspan="5" class="text-center text-muted">No results found.</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
