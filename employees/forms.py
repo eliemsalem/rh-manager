@@ -21,6 +21,18 @@ class EmployeeForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "name@example.com"
             }),
+            "zoho_id": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Zoho ID"
+            }),
+            "country": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Country"
+            }),
+            "lead_1": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Team lead"
+            }),
 
             # --- Job / Project ---
             "project": forms.TextInput(attrs={
@@ -31,14 +43,6 @@ class EmployeeForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Job title"
             }),
-            "lead_1": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Team lead"
-            }),
-            "accomodation": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Accommodation details"
-            }),
 
             # --- Contract ---
             "contract_type": forms.TextInput(attrs={
@@ -48,6 +52,38 @@ class EmployeeForm(forms.ModelForm):
             "contract_company": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Contract company"
+            }),
+            "accomodation": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Accommodation details"
+            }),
+
+            # --- Dates ---
+            "pt_date": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"},
+                format="%Y-%m-%d"
+            ),
+            "ft_date": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"},
+                format="%Y-%m-%d"
+            ),
+            "last_day": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"},
+                format="%Y-%m-%d"
+            ),
+            "date_import": forms.DateTimeInput(
+                attrs={"type": "datetime-local", "class": "form-control"},
+                format="%Y-%m-%dT%H:%M"
+            ),
+
+            # --- Salary ---
+            "salaire_net": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Net salary"
+            }),
+            "devise": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Currency (e.g. EUR, USD)"
             }),
 
             # --- Bank info ---
@@ -68,39 +104,7 @@ class EmployeeForm(forms.ModelForm):
                 "placeholder": "SWIFT / BIC code"
             }),
 
-            # --- Salary ---
-            "salaire_net": forms.NumberInput(attrs={
-                "class": "form-control",
-                "placeholder": "Net salary"
-            }),
-            "devise": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Currency (e.g. EUR, USD)"
-            }),
-
-            # --- Dates ---
-            "pt_date": forms.DateInput(attrs={
-                "type": "date",
-                "class": "form-control"
-            }),
-            "ft_date": forms.DateInput(attrs={
-                "type": "date",
-                "class": "form-control"
-            }),
-            "last_day": forms.DateInput(attrs={
-                "type": "date",
-                "class": "form-control"
-            }),
-
             # --- Other ---
-            "country": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Country"
-            }),
-            "zoho_id": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Zoho ID"
-            }),
             "comment": forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": 3,
@@ -115,11 +119,22 @@ class EmployeeForm(forms.ModelForm):
             }),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # ✅ Apply Bootstrap styling to all fields except the "Active" checkbox
-        for name, field in self.fields.items():
-            if name != "actif":
-                css = field.widget.attrs.get("class", "")
-                if "form-control" not in css:
-                    field.widget.attrs["class"] = f"{css} form-control".strip()
+def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+    # ✅ Ajoute la vérification avant d'accéder au champ
+    for field_name in ["pt_date", "ft_date", "last_day"]:
+        if field_name in self.fields:
+            self.fields[field_name].input_formats = ["%Y-%m-%d"]
+
+    # ✅ Vérifie avant de toucher à date_import (sinon KeyError)
+    if "date_import" in self.fields:
+        self.fields["date_import"].input_formats = ["%Y-%m-%dT%H:%M"]
+
+    # ✅ Bootstrap styling
+    for name, field in self.fields.items():
+        if name != "actif":
+            css = field.widget.attrs.get("class", "")
+            if "form-control" not in css:
+                field.widget.attrs["class"] = f"{css} form-control".strip()
+

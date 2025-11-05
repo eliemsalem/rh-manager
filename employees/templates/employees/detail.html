@@ -3,10 +3,10 @@
 {% block title %}Edit Employee · HR Manager{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4" style="max-width: 95%;">
   <div class="row g-4">
     <!-- Main Form -->
-    <div class="col-lg-8">
+    <div class="col-lg-9">
       <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white">
           <i class="bi bi-person-badge"></i> Edit Employee
@@ -15,7 +15,6 @@
           <form method="post" novalidate>
             {% csrf_token %}
 
-            <!-- Global Error Message -->
             {% if form.errors %}
               <div class="alert alert-danger">
                 <strong>Please correct the errors below:</strong>
@@ -32,58 +31,51 @@
             <!-- General Information -->
             <h6 class="border-bottom pb-2 mb-3 text-muted">General Information</h6>
             <div class="row g-3">
-              <div class="col-md-6">
-                {{ form.prenom.label_tag }} {{ form.prenom }}
-                {% if form.prenom.errors %}
-                  <div class="text-danger small">{{ form.prenom.errors }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6">
-                {{ form.nom.label_tag }} {{ form.nom }}
-                {% if form.nom.errors %}
-                  <div class="text-danger small">{{ form.nom.errors }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6">
-                {{ form.email.label_tag }} {{ form.email }}
-                {% if form.email.errors %}
-                  <div class="text-danger small">{{ form.email.errors }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6">
-                {{ form.project.label_tag }} {{ form.project }}
-                {% if form.project.errors %}
-                  <div class="text-danger small">{{ form.project.errors }}</div>
-                {% endif %}
-              </div>
+              <div class="col-md-6">{{ form.prenom.label_tag }} {{ form.prenom }}</div>
+              <div class="col-md-6">{{ form.nom.label_tag }} {{ form.nom }}</div>
+              <div class="col-md-6">{{ form.zoho_id.label_tag }} {{ form.zoho_id }}</div>
+              <div class="col-md-6">{{ form.project.label_tag }} {{ form.project }}</div>
+              <div class="col-md-6">{{ form.title.label_tag }} {{ form.title }}</div>
+              <div class="col-md-6">{{ form.email.label_tag }} {{ form.email }}</div>
+              <div class="col-md-6">{{ form.country.label_tag }} {{ form.country }}</div>
+              <div class="col-md-6">{{ form.lead_1.label_tag }} {{ form.lead_1 }}</div>
+            </div>
+
+            <!-- Employment Dates -->
+            <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Employment Dates</h6>
+            <div class="row g-3">
+              <div class="col-md-4">{{ form.pt_date.label_tag }} {{ form.pt_date }}</div>
+              <div class="col-md-4">{{ form.ft_date.label_tag }} {{ form.ft_date }}</div>
+              <div class="col-md-4">{{ form.last_day.label_tag }} {{ form.last_day }}</div>
+            </div>
+
+            <!-- Compensation -->
+            <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Compensation</h6>
+            <div class="row g-3">
+              <div class="col-md-6">{{ form.salaire_net.label_tag }} {{ form.salaire_net }}</div>
+              <div class="col-md-6">{{ form.devise.label_tag }} {{ form.devise }}</div>
             </div>
 
             <!-- Contract -->
             <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Contract Details</h6>
             <div class="row g-3">
-              <div class="col-md-6">{{ form.contract_type.label_tag }} {{ form.contract_type }}{% if form.contract_type.errors %}<div class="text-danger small">{{ form.contract_type.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.contract_company.label_tag }} {{ form.contract_company }}{% if form.contract_company.errors %}<div class="text-danger small">{{ form.contract_company.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.title.label_tag }} {{ form.title }}{% if form.title.errors %}<div class="text-danger small">{{ form.title.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.accomodation.label_tag }} {{ form.accomodation }}{% if form.accomodation.errors %}<div class="text-danger small">{{ form.accomodation.errors }}</div>{% endif %}</div>
+              <div class="col-md-6">{{ form.contract_type.label_tag }} {{ form.contract_type }}</div>
+              <div class="col-md-6">{{ form.contract_company.label_tag }} {{ form.contract_company }}</div>
+              <div class="col-md-6">{{ form.accomodation.label_tag }} {{ form.accomodation }}</div>
             </div>
 
-            <!-- Banking -->
+            <!-- Bank Information -->
             <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Bank Information</h6>
             <div class="row g-3">
-              <div class="col-md-6">{{ form.bank_name.label_tag }} {{ form.bank_name }}{% if form.bank_name.errors %}<div class="text-danger small">{{ form.bank_name.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.bank_country.label_tag }} {{ form.bank_country }}{% if form.bank_country.errors %}<div class="text-danger small">{{ form.bank_country.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.iban.label_tag }} {{ form.iban }}{% if form.iban.errors %}<div class="text-danger small">{{ form.iban.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.swift.label_tag }} {{ form.swift }}{% if form.swift.errors %}<div class="text-danger small">{{ form.swift.errors }}</div>{% endif %}</div>
+              <div class="col-md-6">{{ form.bank_name.label_tag }} {{ form.bank_name }}</div>
+              <div class="col-md-6">{{ form.bank_country.label_tag }} {{ form.bank_country }}</div>
+              <div class="col-md-6">{{ form.iban.label_tag }} {{ form.iban }}</div>
+              <div class="col-md-6">{{ form.swift.label_tag }} {{ form.swift }}</div>
             </div>
 
-            <!-- Other Details -->
-            <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Additional Details</h6>
+            <!-- Other Fields -->
+            <h6 class="border-bottom pb-2 mt-4 mb-3 text-muted">Other Details</h6>
             <div class="row g-3">
-              <div class="col-md-6">{{ form.country.label_tag }} {{ form.country }}{% if form.country.errors %}<div class="text-danger small">{{ form.country.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.salaire_net.label_tag }} {{ form.salaire_net }}{% if form.salaire_net.errors %}<div class="text-danger small">{{ form.salaire_net.errors }}</div>{% endif %}</div>
-              <div class="col-md-6">{{ form.devise.label_tag }} {{ form.devise }}{% if form.devise.errors %}<div class="text-danger small">{{ form.devise.errors }}</div>{% endif %}</div>
-
-              <!-- Active switch -->
               <div class="col-md-6">
                 <label class="form-label d-block">Employment Status</label>
                 <div class="form-check form-switch">
@@ -92,12 +84,15 @@
                     {% if form.instance.actif %}✅ Active employee{% else %}🚫 Inactive employee{% endif %}
                   </label>
                 </div>
-                {% if form.actif.errors %}
-                  <div class="text-danger small">{{ form.actif.errors }}</div>
-                {% endif %}
               </div>
 
-              <div class="col-12">{{ form.comment.label_tag }} {{ form.comment }}{% if form.comment.errors %}<div class="text-danger small">{{ form.comment.errors }}</div>{% endif %}</div>
+              <!-- ✅ Read-only Import Date -->
+              <div class="col-md-6">
+                <label class="form-label">Import Date</label>
+                <input type="text" class="form-control" value="{{ employee.date_import|date:'Y-m-d H:i' }}" readonly>
+              </div>
+
+              <div class="col-12">{{ form.comment.label_tag }} {{ form.comment }}</div>
             </div>
 
             <!-- Buttons -->
@@ -117,7 +112,7 @@
     </div>
 
     <!-- Side Actions -->
-    <div class="col-lg-4">
+    <div class="col-lg-3">
       <div class="card shadow-sm border-0">
         <div class="card-header bg-light">
           <i class="bi bi-gear"></i> Actions
@@ -134,7 +129,6 @@
   </div>
 </div>
 
-<!-- Spinner on Save -->
 <script>
   document.querySelector("#saveBtn").addEventListener("click", e => {
     e.target.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';

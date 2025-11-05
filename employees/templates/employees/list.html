@@ -2,58 +2,93 @@
 {% block title %}Active Employees · HR Manager{% endblock %}
 {% block content %}
 
-<div class="card">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0"><i class="bi bi-people"></i> Active Employees</h5>
-      <form class="d-flex" method="get">
-        <input class="form-control me-2" type="search" name="q" value="{{ query }}" placeholder="Search (name, email, project, IBAN…)">
-        <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-      </form>
-    </div>
+<div class="col" style="flex: 0 0 100%; max-width: 100%;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0"><i class="bi bi-people"></i> Active Employees</h5>
+        <form class="d-flex" method="get">
+          <input class="form-control me-2" type="search" name="q" value="{{ query }}" placeholder="Search (name, email, project, Zoho ID…)">
+          <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+      </div>
 
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>Email</th>
-            <th>Project</th>
-            <th>Import Date</th>
-            <th>Active</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle text-nowrap">
+          <thead class="table-light">
+            <tr>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Zoho ID</th>
+              <th>Project</th>
+              <th>Lead 1</th>
+              <th>Title</th>
+              <th>Email</th>
+              <th>Country</th>
+              <th>PT Date</th>
+              <th>FT Date</th>
+              <th>Last Day</th>
+              <th>Salary (Net)</th>
+              <th>Currency</th>
+              <th>Accommodation</th>
+              <th>Contract Type</th>
+              <th>Contract Company</th>
+              <th>Bank Name</th>
+              <th>Bank Country</th>
+              <th>IBAN</th>
+              <th>Swift</th>
+              <th>Import Date</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {% for e in employees %}
-          <tr>
-            <td>{{ e.nom }}</td>
-            <td>{{ e.prenom }}</td>
-            <td>{{ e.email }}</td>
-            <td>{{ e.project }}</td>
-            <td>{{ e.date_import|date:"d/m/Y H:i" }}</td>
-            <td>
-              {% if e.actif %}
-                <span class="badge bg-success">Yes</span>
-              {% else %}
-                <span class="badge bg-secondary">No</span>
-              {% endif %}
-            </td>
-            <td class="text-end">
-              <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
-                <i class="bi bi-pencil-square"></i> Details
-              </a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7" class="text-center text-muted">No employees found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          <tbody>
+            {% for e in employees %}
+            <tr>
+              <td>{{ e.nom }}</td>
+              <td>{{ e.prenom }}</td>
+              <td>{{ e.zoho_id }}</td>
+              <td>{{ e.project }}</td>
+              <td>{{ e.lead_1 }}</td>
+              <td>{{ e.title }}</td>
+              <td>{{ e.email }}</td>
+              <td>{{ e.country }}</td>
+              <td>{{ e.pt_date|date:"d/m/Y" }}</td>
+              <td>{{ e.ft_date|date:"d/m/Y" }}</td>
+              <td>{{ e.last_day|date:"d/m/Y" }}</td>
+              <td>{{ e.salaire_net }}</td>
+              <td>{{ e.devise }}</td>
+              <td>{{ e.accomodation }}</td>
+              <td>{{ e.contract_type }}</td>
+              <td>{{ e.contract_company }}</td>
+              <td>{{ e.bank_name }}</td>
+              <td>{{ e.bank_country }}</td>
+              <td>{{ e.iban }}</td>
+              <td>{{ e.swift }}</td>
+              <td>{{ e.date_import|date:"d/m/Y H:i" }}</td>
+              <td>
+                {% if e.actif %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
+                  <i class="bi bi-pencil-square"></i> Details
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="23" class="text-center text-muted">No employees found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </div>
 </div>
