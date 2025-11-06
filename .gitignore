@@ -1,0 +1,3 @@
+# Ignore media and generated PDFs
+/media/
+*.pdf
