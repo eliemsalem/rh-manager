@@ -2,46 +2,13 @@
 {% block title %}Payroll · HR Manager{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <div class="card shadow-sm p-3 border-0">
-    <div class="d-flex flex-wrap align-items-end gap-2">
-      <form method="get" class="row g-2">
-        <!-- Month -->
-        <div class="col-auto">
-          <label class="form-label mb-0 fw-semibold">Month</label>
-          <select name="month" class="form-select">
-            {% for m, mname in months %}
-              <option value="{{ m }}" {% if m == month %}selected{% endif %}>
-                {{ mname|capfirst }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
+<div class="col" style="flex: 0 0 100%; max-width: 100%;">
+  <div class="card shadow-sm border-0 p-3">
 
-        <!-- Year -->
-        <div class="col-auto">
-          <label class="form-label mb-0 fw-semibold">Year</label>
-          <select name="year" class="form-select">
-            {% for y in years %}
-              <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Search -->
-        <div class="col-auto">
-          <label class="form-label mb-0 fw-semibold">Search</label>
-          <input type="text" class="form-control" placeholder="Name, email, project..." name="q" value="{{ query }}">
-        </div>
-
-        <!-- Filter button -->
-        <div class="col-auto align-self-end">
-          <button class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
-        </div>
-      </form>
-
-      <!-- Actions -->
-      <div class="ms-auto d-flex gap-2">
+    <!-- Header & actions -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+      <h5 class="mb-0"><i class="bi bi-cash-stack"></i> Payroll Overview</h5>
+      <div class="d-flex gap-2 flex-wrap">
         <a class="btn btn-success" href="{% url 'payroll:payroll_generate' %}?year={{ year }}&month={{ month }}">
           <i class="bi bi-gear"></i> Generate for Active Employees
         </a>
@@ -55,44 +22,69 @@
     </div>
 
     <!-- Payroll Table -->
-    <div class="table-responsive mt-4">
-      <table class="table table-hover align-middle table-sm">
+    <div class="table-responsive">
+      <table id="payrollTable" class="table table-hover table-striped align-middle text-nowrap">
         <thead class="table-light">
           <tr>
             <th>Employee</th>
+            <th>Country</th>
+            <th>Project</th>
+            <th>Contract Type</th>
+            <th>Company</th>
+            <th>Bank</th>
             <th>Base</th>
             <th>Overtime</th>
             <th>Reimbursement</th>
             <th>Others</th>
             <th>Deduction</th>
             <th>Total</th>
+            <th>Last Day</th>
+            <th>Comment</th>
             <th class="text-end">Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {% for it in items %}
           <tr>
             <td>{{ it.employee.prenom }} {{ it.employee.nom }}</td>
+            <td>{{ it.employee.country|default:"—" }}</td>
+            <td>{{ it.employee.project|default:"—" }}</td>
+            <td>{{ it.employee.contract_type|default:"—" }}</td>
+            <td>{{ it.employee.contract_company|default:"—" }}</td>
+            <td>{{ it.employee.bank_name|default:"—" }}</td>
             <td>{{ it.salaire_base|floatformat:2 }} {{ it.devise }}</td>
-            <td>{{ it.heures_supp|default:"-" }} → {{ it.montant_heures_supp|default:"-" }}</td>
-            <td>{{ it.remboursement|default:"-" }}</td>
-            <td>{{ it.autres|default:"-" }}</td>
-            <td>{{ it.deduction|default:"-" }}</td>
+            <td>
+              {% if it.heures_supp %}
+                {{ it.heures_supp }}h → {{ it.montant_heures_supp|floatformat:2 }} {{ it.devise }}
+              {% else %}
+                –
+              {% endif %}
+            </td>
+            <td>{{ it.remboursement|default:"—" }}</td>
+            <td>{{ it.autres|default:"—" }}</td>
+            <td>{{ it.deduction|default:"—" }}</td>
             <td><strong>{{ it.total_paye|floatformat:2 }} {{ it.devise }}</strong></td>
+            <td>
+              {% if it.employee.last_day %}
+                <span class="text-danger fw-semibold">{{ it.employee.last_day|date:"d/m/Y" }}</span>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>{{ it.employee.comment|truncatechars:30 }}</td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-primary" href="{% url 'payroll:payroll_edit' it.pk %}">
-                <i class="bi bi-pencil"></i> Edit
+                <i class="bi bi-pencil"></i>
               </a>
               <a class="btn btn-sm btn-outline-secondary" href="{% url 'payroll:payroll_pdf' it.pk %}">
-                <i class="bi bi-filetype-pdf"></i> PDF
+                <i class="bi bi-filetype-pdf"></i>
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8" class="text-center text-muted py-3">
-              No payroll found for this period.
-            </td>
+            <td colspan="15" class="text-center text-muted py-3">No payroll found for this period.</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -100,4 +92,34 @@
     </div>
   </div>
 </div>
+
+<!-- ✅ DataTables Dependencies -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- ✅ Initialize DataTable -->
+<script>
+  $(document).ready(function() {
+    $('#payrollTable').DataTable({
+      pageLength: 15,
+      lengthChange: false,
+      order: [[0, 'asc']],
+      language: {
+        search: "🔍 Search:",
+        info: "Showing _START_ to _END_ of _TOTAL_ payroll entries",
+        infoEmpty: "No payroll entries",
+        zeroRecords: "No matching results",
+        paginate: {
+          first: "«",
+          last: "»",
+          next: "›",
+          previous: "‹"
+        }
+      }
+    });
+  });
+</script>
+
 {% endblock %}

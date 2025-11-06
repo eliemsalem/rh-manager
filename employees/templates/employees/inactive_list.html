@@ -1,39 +1,112 @@
 {% extends "employees/base.html" %}
 {% block title %}Inactive Employees · HR Manager{% endblock %}
 {% block content %}
-<div class="card"><div class="card-body">
-  <h5 class="mb-3"><i class="bi bi-moon"></i> Inactive Employees</h5>
-  <div class="table-responsive">
-    <table class="table align-middle">
-      <thead>
-        <tr>
-          <th>Last Name</th>
-          <th>First Name</th>
-          <th>Email</th>
-          <th>Project</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for e in employees %}
-        <tr>
-          <td>{{ e.nom }}</td>
-          <td>{{ e.prenom }}</td>
-          <td>{{ e.email }}</td>
-          <td>{{ e.project }}</td>
-          <td class="text-end">
-            <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
-              <i class="bi bi-pencil-square"></i> Details
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="5" class="text-center text-muted">No results found.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+<div class="col" style="flex: 0 0 100%; max-width: 100%;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0 text-secondary">
+          <i class="bi bi-moon"></i> Inactive Employees
+        </h5>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table id="inactiveTable" class="table table-hover table-striped align-middle text-nowrap">
+          <thead class="table-light">
+            <tr>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Email</th>
+              <th>Project</th>
+              <th>Country</th>
+              <th>Contract Type</th>
+              <th>Contract Company</th>
+              <th>PT Date</th>
+              <th>FT Date</th>
+              <th>Last Day</th>
+              <th>Import Date</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for e in employees %}
+            <tr>
+              <td>{{ e.nom }}</td>
+              <td>{{ e.prenom }}</td>
+              <td>{{ e.email }}</td>
+              <td>{{ e.project }}</td>
+              <td>{{ e.country }}</td>
+              <td>{{ e.contract_type }}</td>
+              <td>{{ e.contract_company }}</td>
+              <td>{{ e.pt_date|date:"d/m/Y" }}</td>
+              <td>{{ e.ft_date|date:"d/m/Y" }}</td>
+              <td>
+                {% if e.last_day %}
+                  <span class="text-danger fw-semibold">{{ e.last_day|date:"d/m/Y" }}</span>
+                {% else %}
+                  <span class="text-muted">–</span>
+                {% endif %}
+              </td>
+              <td>{{ e.date_import|date:"d/m/Y H:i" }}</td>
+              <td>
+                {% if e.actif %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:employee_detail' e.pk %}">
+                  <i class="bi bi-pencil-square"></i> Details
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="13" class="text-center text-muted">No inactive employees found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
-</div></div>
+</div>
+
+<!-- ✅ DataTables dependencies -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- ✅ DataTable Initialization -->
+<script>
+  $(document).ready(function() {
+    $('#inactiveTable').DataTable({
+      pageLength: 10,
+      lengthChange: false,
+      order: [[9, 'desc']], // trie par date de fin
+      language: {
+        search: "🔍 Rechercher :",
+        info: "Affichage de _START_ à _END_ sur _TOTAL_ employés",
+        infoEmpty: "Aucun employé trouvé",
+        zeroRecords: "Aucun résultat",
+        paginate: {
+          first: "«",
+          last: "»",
+          next: "›",
+          previous: "‹"
+        }
+      }
+    });
+  });
+</script>
+
 {% endblock %}

@@ -5,6 +5,8 @@
 <div class="col" style="flex: 0 0 100%; max-width: 100%;">
   <div class="card shadow-sm">
     <div class="card-body">
+
+      <!-- Header -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0"><i class="bi bi-people"></i> Active Employees</h5>
         <form class="d-flex" method="get">
@@ -13,8 +15,9 @@
         </form>
       </div>
 
+      <!-- Table -->
       <div class="table-responsive">
-        <table class="table table-hover table-striped align-middle text-nowrap">
+        <table id="employeeTable" class="table table-hover table-striped align-middle text-nowrap">
           <thead class="table-light">
             <tr>
               <th>Last Name</th>
@@ -92,5 +95,34 @@
     </div>
   </div>
 </div>
+
+<!-- ✅ DataTables dependencies -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- ✅ Initialisation du tableau -->
+<script>
+  $(document).ready(function() {
+    $('#employeeTable').DataTable({
+      pageLength: 10,
+      lengthChange: false,
+      order: [[0, 'asc']],
+      language: {
+        search: "🔍 Rechercher :",
+        info: "Affichage de _START_ à _END_ sur _TOTAL_ employés",
+        infoEmpty: "Aucun employé trouvé",
+        zeroRecords: "Aucun résultat",
+        paginate: {
+          first: "«",
+          last: "»",
+          next: "›",
+          previous: "‹"
+        }
+      }
+    });
+  });
+</script>
 
 {% endblock %}
