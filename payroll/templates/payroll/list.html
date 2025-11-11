@@ -72,36 +72,24 @@
         <tbody>
           {% for it in items %}
           <tr>
-            <td>{{ it.employee.prenom|default:"" }} {{ it.employee.nom|default:"" }}</td>
-            <td>{{ it.employee.country|default:"—" }}</td>
-            <td>{{ it.employee.project|default:"—" }}</td>
-            <td>{{ it.employee.contract_type|default:"—" }}</td>
-            <td>{{ it.employee.contract_company|default:"—" }}</td>
-            <td>{{ it.employee.bank_name|default:"—" }}</td>
-            <td>
-              {% if it.salaire_base %}
-                {{ it.salaire_base|floatformat:2 }} {{ it.devise }}
-              {% else %}
-                —
-              {% endif %}
-            </td>
+            <td>{{ it.employee.prenom|default_if_none:"" }} {{ it.employee.nom|default_if_none:"" }}</td>
+            <td>{{ it.employee.country|default_if_none:"—" }}</td>
+            <td>{{ it.employee.project|default_if_none:"—" }}</td>
+            <td>{{ it.employee.contract_type|default_if_none:"—" }}</td>
+            <td>{{ it.employee.contract_company|default_if_none:"—" }}</td>
+            <td>{{ it.employee.bank_name|default_if_none:"—" }}</td>
+            <td>{{ it.salaire_base|default_if_none:"—" }}</td>
             <td>
               {% if it.heures_supp %}
-                {{ it.heures_supp }}h → {{ it.montant_heures_supp|floatformat:2 }} {{ it.devise }}
+                {{ it.heures_supp }}h → {{ it.montant_heures_supp|default_if_none:"—" }}
               {% else %}
                 —
               {% endif %}
             </td>
-            <td>{{ it.remboursement|default:"—" }}</td>
-            <td>{{ it.autres|default:"—" }}</td>
-            <td>{{ it.deduction|default:"—" }}</td>
-            <td>
-              {% if it.total_paye %}
-                <strong>{{ it.total_paye|floatformat:2 }} {{ it.devise }}</strong>
-              {% else %}
-                —
-              {% endif %}
-            </td>
+            <td>{{ it.remboursement|default_if_none:"—" }}</td>
+            <td>{{ it.autres|default_if_none:"—" }}</td>
+            <td>{{ it.deduction|default_if_none:"—" }}</td>
+            <td><strong>{{ it.total_paye|default_if_none:"—" }}</strong></td>
             <td>
               {% if it.employee.last_day %}
                 <span class="text-danger fw-semibold">{{ it.employee.last_day|date:"d/m/Y" }}</span>
@@ -109,7 +97,7 @@
                 <span class="text-muted">—</span>
               {% endif %}
             </td>
-            <td>{{ it.employee.comment|default:"—"|truncatechars:30 }}</td>
+            <td>{{ it.employee.comment|default_if_none:"—"|truncatechars:30 }}</td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-primary" href="{% url 'payroll:payroll_edit' it.pk %}">
                 <i class="bi bi-pencil"></i>
@@ -120,8 +108,11 @@
             </td>
           </tr>
           {% empty %}
+          <!-- ✅ Ligne vide compatible DataTables -->
           <tr>
-            <td colspan="15" class="text-center text-muted py-3">No payroll found for this period.</td>
+            {% for i in "123456789012345" %}
+              <td class="text-center text-muted">—</td>
+            {% endfor %}
           </tr>
           {% endfor %}
         </tbody>
@@ -139,11 +130,15 @@
 <!-- ✅ Initialize DataTable -->
 <script>
   $(document).ready(function() {
+    const colCount = 15; // même nombre que <th>
+
     $('#payrollTable').DataTable({
-      pageLength: 15,
-      lengthChange: false,
+      pageLength: 50,
+      lengthChange: true,
+      autoWidth: false,
+      responsive: true,
       order: [[0, 'asc']],
-      errorMode: 'none', // ✅ Empêche le plantage en cas de désalignement
+      columns: Array.from({ length: colCount }, () => ({ defaultContent: '—' })), // ✅ corrige le warning
       language: {
         search: "🔍 Search:",
         info: "Showing _START_ to _END_ of _TOTAL_ payroll entries",
