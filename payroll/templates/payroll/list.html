@@ -5,9 +5,34 @@
 <div class="col" style="flex: 0 0 100%; max-width: 100%;">
   <div class="card shadow-sm border-0 p-3">
 
-    <!-- Header & actions -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-      <h5 class="mb-0"><i class="bi bi-cash-stack"></i> Payroll Overview</h5>
+    <!-- Header & Filters -->
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+      <div>
+        <h5 class="mb-2"><i class="bi bi-cash-stack"></i> Payroll Overview</h5>
+        <form method="get" class="d-flex flex-wrap align-items-end gap-2">
+          <div>
+            <label class="form-label mb-0 fw-semibold">Month</label>
+            <select name="month" class="form-select">
+              {% for m, mname in months %}
+                <option value="{{ m }}" {% if m == month %}selected{% endif %}>{{ mname|capfirst }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="form-label mb-0 fw-semibold">Year</label>
+            <select name="year" class="form-select">
+              {% for y in years %}
+                <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button class="btn btn-primary mt-3">
+            <i class="bi bi-funnel"></i> Filter
+          </button>
+        </form>
+      </div>
+
+      <!-- Actions -->
       <div class="d-flex gap-2 flex-wrap">
         <a class="btn btn-success" href="{% url 'payroll:payroll_generate' %}?year={{ year }}&month={{ month }}">
           <i class="bi bi-gear"></i> Generate for Active Employees
@@ -47,24 +72,36 @@
         <tbody>
           {% for it in items %}
           <tr>
-            <td>{{ it.employee.prenom }} {{ it.employee.nom }}</td>
+            <td>{{ it.employee.prenom|default:"" }} {{ it.employee.nom|default:"" }}</td>
             <td>{{ it.employee.country|default:"—" }}</td>
             <td>{{ it.employee.project|default:"—" }}</td>
             <td>{{ it.employee.contract_type|default:"—" }}</td>
             <td>{{ it.employee.contract_company|default:"—" }}</td>
             <td>{{ it.employee.bank_name|default:"—" }}</td>
-            <td>{{ it.salaire_base|floatformat:2 }} {{ it.devise }}</td>
+            <td>
+              {% if it.salaire_base %}
+                {{ it.salaire_base|floatformat:2 }} {{ it.devise }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
             <td>
               {% if it.heures_supp %}
                 {{ it.heures_supp }}h → {{ it.montant_heures_supp|floatformat:2 }} {{ it.devise }}
               {% else %}
-                –
+                —
               {% endif %}
             </td>
             <td>{{ it.remboursement|default:"—" }}</td>
             <td>{{ it.autres|default:"—" }}</td>
             <td>{{ it.deduction|default:"—" }}</td>
-            <td><strong>{{ it.total_paye|floatformat:2 }} {{ it.devise }}</strong></td>
+            <td>
+              {% if it.total_paye %}
+                <strong>{{ it.total_paye|floatformat:2 }} {{ it.devise }}</strong>
+              {% else %}
+                —
+              {% endif %}
+            </td>
             <td>
               {% if it.employee.last_day %}
                 <span class="text-danger fw-semibold">{{ it.employee.last_day|date:"d/m/Y" }}</span>
@@ -72,7 +109,7 @@
                 <span class="text-muted">—</span>
               {% endif %}
             </td>
-            <td>{{ it.employee.comment|truncatechars:30 }}</td>
+            <td>{{ it.employee.comment|default:"—"|truncatechars:30 }}</td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-primary" href="{% url 'payroll:payroll_edit' it.pk %}">
                 <i class="bi bi-pencil"></i>
@@ -106,6 +143,7 @@
       pageLength: 15,
       lengthChange: false,
       order: [[0, 'asc']],
+      errorMode: 'none', // ✅ Empêche le plantage en cas de désalignement
       language: {
         search: "🔍 Search:",
         info: "Showing _START_ to _END_ of _TOTAL_ payroll entries",
@@ -121,5 +159,4 @@
     });
   });
 </script>
-
 {% endblock %}
